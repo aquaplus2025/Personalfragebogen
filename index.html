@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personalfragebogen - AQUA-PLUS</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+</head>
+<body>
+    <div class="no-print toolbar">
+        <button type="button" class="win-btn" onclick="saveFormData()">Entwurf speichern</button>
+        <button type="button" class="win-btn" onclick="loadFormData()">Entwurf laden</button>
+        <button type="button" class="win-btn" onclick="exportCSV()">CSV exportieren</button>
+        <button type="button" class="win-btn" onclick="window.print()">Drucken / PDF</button>
+        <button type="button" class="win-btn" onclick="clearForm()">Formular leeren</button>
+    </div>
+
+    <form id="personalForm" onsubmit="return false;">
+
+        <!-- PAGE 1 -->
+        <div class="page" id="page1">
+            <header class="form-header">
+                <div class="header-left">
+                    <h1>Personalfragebogen</h1>
+                    <div class="firma-field">
+                        <label>FIRMA:</label>
+                        <span class="firma-name">AQUA-PLUS Wasseraufbereitung GmbH</span>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <img src="AQUA-PLUS-WHITE-LOGO_TRANSP.png" alt="AQUA-PLUS Logo" class="logo">
+                    <div class="qr-personalnummer-row">
+                        <div id="qrcode" class="qr-code-box"></div>
+                        <div class="personalnummer-box">
+                            <label>Personalnummer</label>
+                            <input type="text" name="personalnummer" id="personalnummer">
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Persönliche Angaben -->
+            <section class="form-section">
+                <h2>Persönliche Angaben:</h2>
+                <div class="form-grid">
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label>Familienname</label>
+                            <input type="text" name="familienname" required>
+                        </div>
+                        <div class="form-field">
+                            <label>Vorname</label>
+                            <input type="text" name="vorname" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label>Straße und Hausnummer (inkl. Anschriftenzusatz)</label>
+                            <input type="text" name="strasse">
+                        </div>
+                        <div class="form-field">
+                            <label>PLZ, Ort</label>
+                            <input type="text" name="plz_ort">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label>Geburtsdatum</label>
+                            <input type="date" name="geburtsdatum">
+                        </div>
+                        <div class="form-field">
+                            <label>Geschlecht</label>
+                            <div class="checkbox-group">
+                                <label class="checkbox-label">
+                                    <input type="radio" name="geschlecht" value="männlich"> männlich
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="radio" name="geschlecht" value="weiblich"> weiblich
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label>Versicherungsnummer (gem. Sozialvers.Ausweis)</label>
+                            <input type="text" name="versicherungsnummer">
+                        </div>
+                        <div class="form-field half-split">
+                            <div>
+                                <label>Familienstand</label>
+                                <input type="text" name="familienstand">
+                            </div>
+                            <div>
+                                <label>Verheiratet?</label>
+                                <div class="checkbox-group">
+                                    <label class="checkbox-label">
+                                        <input type="radio" name="verheiratet" value="ja"> ja
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="radio" name="verheiratet" value="nein"> nein
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label>Staatsangehörigkeit</label>
+                            <input type="text" name="staatsangehoerigkeit">
+                        </div>
+                        <div class="form-field">
+                            <label>Schwerbehindert</label>
+                            <div class="checkbox-group">
+                                <label class="checkbox-label">
+                                    <input type="radio" name="schwerbehindert" value="ja"> ja
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="radio" name="schwerbehindert" value="nein"> nein
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-field full-width">
+                            <label>Arbeitnehmernummer Sozialkasse – Bau</label>
+                            <input type="text" name="arbeitnehmernummer_sozialkasse">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label>Kontonummer (IBAN)</label>
+                            <input type="text" name="iban" placeholder="DE00 0000 0000 0000 0000 00">
+                        </div>
+                        <div class="form-field">
+                            <label>Bankleitzahl/Bankbezeichnung (BIC)</label>
+                            <input type="text" name="bic">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Beschäftigung -->
+            <section class="form-section">
+                <h2>Beschäftigung:</h2>
+                <div class="form-grid">
+                    <div class="form-row three-col">
+                        <div class="form-field">
+                            <label>Eintrittsdatum</label>
+                            <input type="date" name="eintrittsdatum">
+                        </div>
+                        <div class="form-field">
+                            <label>Ersteintrittsdatum</label>
+                            <input type="date" name="ersteintrittsdatum">
+                        </div>
+                        <div class="form-field">
+                            <label>Betriebsstätte</label>
+                            <input type="text" name="betriebsstaette">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label>Berufsbezeichnung</label>
+                            <input type="text" name="berufsbezeichnung">
+                        </div>
+                        <div class="form-field">
+                            <label>Ausgeübte Tätigkeit</label>
+                            <input type="text" name="ausgeuebte_taetigkeit">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label>Ausbildung</label>
+                            <div class="checkbox-group vertical">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="ausbildung_volksschule" value="ja"> Volks-/Hauptschule/mittlere Reife
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="ausbildung_abitur" value="ja"> Abitur
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="ausbildung_fachschule" value="ja"> Fachschule/Fachhochschule
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="ausbildung_universitaet" value="ja"> Universitätsabschluss
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-field">
+                            <label>Berufsausbildung</label>
+                            <div class="checkbox-group">
+                                <label class="checkbox-label">
+                                    <input type="radio" name="berufsausbildung" value="mit"> mit
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="radio" name="berufsausbildung" value="ohne"> ohne
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row three-col">
+                        <div class="form-field">
+                            <label>Urlaubsanspruch (Kalenderjahr)</label>
+                            <input type="number" name="urlaubsanspruch">
+                        </div>
+                        <div class="form-field">
+                            <label>Wöchentliche Arbeitszeit</label>
+                            <input type="text" name="woechentliche_arbeitszeit">
+                        </div>
+                        <div class="form-field">
+                            <label>Im Baugewerbe beschäftigt seit</label>
+                            <input type="text" name="baugewerbe_seit">
+                        </div>
+                    </div>
+                    <div class="form-row three-col">
+                        <div class="form-field">
+                            <label>Kostenstelle</label>
+                            <input type="text" name="kostenstelle">
+                        </div>
+                        <div class="form-field">
+                            <label>Abt.-Nummer</label>
+                            <input type="text" name="abt_nummer">
+                        </div>
+                        <div class="form-field">
+                            <label>Personengruppe</label>
+                            <input type="text" name="personengruppe">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label>Beginn der Ausbildung</label>
+                            <input type="date" name="beginn_ausbildung">
+                        </div>
+                        <div class="form-field">
+                            <label>Vorauss. Ende der Ausbildung</label>
+                            <input type="date" name="ende_ausbildung">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Befristung -->
+            <section class="form-section">
+                <h2>Befristung:</h2>
+                <div class="form-grid">
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="av_befristet" value="ja"> Das Arbeitsverhältnis (AV) ist befristet
+                            </label>
+                        </div>
+                        <div class="form-field">
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="av_schriftlich" value="ja"> Der befristete Arbeitsvertrag wurde schriftlich abgeschlossen
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label>Das AV war bei Abschluss des Arbeitsvertrages befristet zum</label>
+                            <input type="date" name="befristet_zum">
+                        </div>
+                        <div class="form-field">
+                            <label>Der befristete Arbeitsvertrag wurde abgeschlossen am</label>
+                            <input type="date" name="vertrag_abgeschlossen_am">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-field full-width">
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="weiterbesch_aussicht" value="ja"> Die befristete Beschäftigung war für mindestens 2 Monate vorgesehen und eine Möglichkeit der Weiterbeschäftigung wurde durch den Arbeitgeber bei Abschluss des Vertrages in Aussicht gestellt
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Steuer -->
+            <section class="form-section">
+                <h2>Steuer:</h2>
+                <div class="form-grid">
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label>AGS/Gemeinde Nr. lt. Steuerkarte</label>
+                            <input type="text" name="ags_gemeinde_nr">
+                        </div>
+                        <div class="form-field">
+                            <label>Finanzamt Nummer lt. Steuerkarte</label>
+                            <input type="text" name="finanzamt_nummer">
+                        </div>
+                    </div>
+                    <div class="form-row four-col">
+                        <div class="form-field">
+                            <label>Identifikationsnummer</label>
+                            <input type="text" name="identifikationsnummer">
+                        </div>
+                        <div class="form-field">
+                            <label>Steuerklasse/Faktor</label>
+                            <input type="text" name="steuerklasse">
+                        </div>
+                        <div class="form-field">
+                            <label>Anzahl Kinderfreibeträge</label>
+                            <input type="text" name="kinderfreibetraege">
+                        </div>
+                        <div class="form-field">
+                            <label>Konfession</label>
+                            <input type="text" name="konfession">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sozialversicherung -->
+            <section class="form-section">
+                <h2>Sozialversicherung:</h2>
+                <div class="form-grid">
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label>Krankenkasse</label>
+                            <input type="text" name="krankenkasse">
+                        </div>
+                        <div class="form-field">
+                            <label class="hint">HINWEIS: Bei freiwilliger Krankenversicherung bitte Anlage ausfüllen</label>
+                        </div>
+                        <div class="form-field">
+                            <label>KK-Nr.</label>
+                            <input type="text" name="kk_nr">
+                        </div>
+                    </div>
+                    <div class="form-row five-col">
+                        <div class="form-field">
+                            <label>KV</label>
+                            <input type="text" name="kv">
+                        </div>
+                        <div class="form-field">
+                            <label>RV</label>
+                            <input type="text" name="rv">
+                        </div>
+                        <div class="form-field">
+                            <label>AV</label>
+                            <input type="text" name="av">
+                        </div>
+                        <div class="form-field">
+                            <label>PV</label>
+                            <input type="text" name="pv">
+                        </div>
+                        <div class="form-field">
+                            <label>UV - Gefahrtarifstelle (GST)</label>
+                            <input type="text" name="uv_gst">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <footer class="page-footer">
+                <span class="version">Stand: 01/2025</span>
+                <span class="page-number">1</span>
+            </footer>
+        </div>
+
+        <!-- PAGE 2 -->
+        <div class="page page-continuation" id="page2">
+
+            <!-- Entlohnung -->
+            <section class="form-section">
+                <h2>Entlohnung:</h2>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Bezeichnung</th>
+                            <th>Betrag</th>
+                            <th>Gültig ab</th>
+                            <th>Stundenlohn</th>
+                            <th>Gültig ab</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><input type="text" name="entlohnung_bez_1"></td>
+                            <td><input type="text" name="entlohnung_betrag_1"></td>
+                            <td><input type="date" name="entlohnung_gueltig_1"></td>
+                            <td><input type="text" name="stundenlohn_1"></td>
+                            <td><input type="date" name="stundenlohn_gueltig_1"></td>
+                        </tr>
+                        <tr>
+                            <td><input type="text" name="entlohnung_bez_2"></td>
+                            <td><input type="text" name="entlohnung_betrag_2"></td>
+                            <td><input type="date" name="entlohnung_gueltig_2"></td>
+                            <td><input type="text" name="stundenlohn_2"></td>
+                            <td><input type="date" name="stundenlohn_gueltig_2"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- VWL -->
+            <section class="form-section">
+                <h2>VWL <span class="hint-inline">(nur notwendig wenn Vertrag vorliegt):</span></h2>
+                <div class="form-grid">
+                    <div class="form-row three-col">
+                        <div class="form-field">
+                            <label>Empfänger VL</label>
+                            <input type="text" name="vwl_empfaenger">
+                        </div>
+                        <div class="form-field">
+                            <label>AG-Anteil (Höhe mtl.)</label>
+                            <input type="text" name="vwl_ag_anteil">
+                        </div>
+                        <div class="form-field">
+                            <label>Seit wann</label>
+                            <input type="date" name="vwl_seit_wann">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label>Vertragsnr.</label>
+                            <input type="text" name="vwl_vertragsnr">
+                        </div>
+                        <div class="form-field">
+                            <label>Betrag</label>
+                            <input type="text" name="vwl_betrag">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label>Kontonummer</label>
+                            <input type="text" name="vwl_kontonummer">
+                        </div>
+                        <div class="form-field">
+                            <label>Bankleitzahl/Bankbezeichnung</label>
+                            <input type="text" name="vwl_bank">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Arbeitspapiere -->
+            <section class="form-section">
+                <h2>Angaben zu den Arbeitspapieren</h2>
+                <table class="document-table">
+                    <tbody>
+                        <tr>
+                            <td class="doc-name">Arbeitsvertrag</td>
+                            <td><label class="checkbox-label"><input type="checkbox" name="arbeitsvertrag_liegt_vor" value="ja"> liegt vor</label></td>
+                            <td><label class="checkbox-label"><input type="checkbox" name="arbeitsvertrag_liegt_bei" value="ja"> liegt bei</label></td>
+                        </tr>
+                        <tr>
+                            <td class="doc-name">Lohnsteuerkarte</td>
+                            <td><label class="checkbox-label"><input type="checkbox" name="lohnsteuerkarte_liegt" value="ja"> liegt</label></td>
+                            <td><label class="checkbox-label"><input type="checkbox" name="lohnsteuerkarte_liegt_bei" value="ja"> liegt bei</label></td>
+                        </tr>
+                        <tr>
+                            <td class="doc-name">SV-Ausweis</td>
+                            <td><label class="checkbox-label"><input type="checkbox" name="sv_ausweis_vorgelegen" value="ja"> hat vorgelegen</label></td>
+                            <td><label class="checkbox-label"><input type="checkbox" name="sv_ausweis_kopie" value="ja"> Kopie liegt bei</label></td>
+                        </tr>
+                        <tr>
+                            <td class="doc-name">VL Vertrag</td>
+                            <td><label class="checkbox-label"><input type="checkbox" name="vl_vertrag_liegt_vor" value="ja"> liegt vor</label></td>
+                            <td><label class="checkbox-label"><input type="checkbox" name="vl_vertrag_liegt_bei" value="ja"> liegt bei</label></td>
+                        </tr>
+                        <tr>
+                            <td class="doc-name">Nachweis Elterneigenschaft<br><small>(wenn keine Kinder FB auf LSt-Karte)</small></td>
+                            <td><label class="checkbox-label"><input type="checkbox" name="elterneigenschaft_liegt_vor" value="ja"> liegt vor</label></td>
+                            <td><label class="checkbox-label"><input type="checkbox" name="elterneigenschaft_liegt_bei" value="ja"> liegt bei</label></td>
+                        </tr>
+                        <tr>
+                            <td class="doc-name">BAV (Betriebliche Altersversorgung) Vertrag</td>
+                            <td><label class="checkbox-label"><input type="checkbox" name="bav_liegt_vor" value="ja"> liegt vor</label></td>
+                            <td><label class="checkbox-label"><input type="checkbox" name="bav_liegt_bei" value="ja"> liegt bei</label></td>
+                        </tr>
+                        <tr>
+                            <td class="doc-name">Erklärung über die Verdienste bei Vorbeschäftigungen zur Beurteilung der Versicherungsfreiheit in der Krankenversicherung</td>
+                            <td><label class="checkbox-label"><input type="checkbox" name="vorbeschaeftigung_liegt_vor" value="ja"> liegt vor</label></td>
+                            <td><label class="checkbox-label"><input type="checkbox" name="vorbeschaeftigung_liegt_bei" value="ja"> liegt bei</label></td>
+                        </tr>
+                        <tr>
+                            <td class="doc-name">Unterlagen Sozialkasse Bau/Maler</td>
+                            <td><label class="checkbox-label"><input type="checkbox" name="sozialkasse_liegt_vor" value="ja"> liegt vor</label></td>
+                            <td><label class="checkbox-label"><input type="checkbox" name="sozialkasse_liegt_bei" value="ja"> liegt bei</label></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Vorbeschäftigungszeiten -->
+            <section class="form-section">
+                <h2>Angaben zu steuerpflichtigen Vorbeschäftigungszeiten im laufenden Kalenderjahr</h2>
+                <p class="section-note">(= Zeiträume in denen unter Vorlage der Lohnsteuerkarte gearbeitet wurde)</p>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Zeitraum von</th>
+                            <th>Zeitraum bis</th>
+                            <th>Art der Beschäftigung</th>
+                            <th>Anzahl der Beschäftigungstage</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><input type="date" name="vorbeschaeftigung_von_1"></td>
+                            <td><input type="date" name="vorbeschaeftigung_bis_1"></td>
+                            <td><input type="text" name="vorbeschaeftigung_art_1"></td>
+                            <td><input type="number" name="vorbeschaeftigung_tage_1"></td>
+                        </tr>
+                        <tr>
+                            <td><input type="date" name="vorbeschaeftigung_von_2"></td>
+                            <td><input type="date" name="vorbeschaeftigung_bis_2"></td>
+                            <td><input type="text" name="vorbeschaeftigung_art_2"></td>
+                            <td><input type="number" name="vorbeschaeftigung_tage_2"></td>
+                        </tr>
+                        <tr>
+                            <td><input type="date" name="vorbeschaeftigung_von_3"></td>
+                            <td><input type="date" name="vorbeschaeftigung_bis_3"></td>
+                            <td><input type="text" name="vorbeschaeftigung_art_3"></td>
+                            <td><input type="number" name="vorbeschaeftigung_tage_3"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Erklärung -->
+            <section class="form-section declaration">
+                <h2>Erklärung des Arbeitnehmers:</h2>
+                <p class="declaration-text">
+                    Ich versichere, dass die vorstehenden Angaben der Wahrheit entsprechen. Ich verpflichte mich, meinem Arbeitgeber alle Änderungen, insbesondere in Bezug auf weitere Beschäftigungen (in Bezug auf Art, Dauer und Entgelt) unverzüglich mitzuteilen.
+                </p>
+                <div class="signature-row">
+                    <div class="signature-field">
+                        <input type="date" name="unterschrift_datum">
+                        <label>Datum</label>
+                    </div>
+                    <div class="signature-field">
+                        <div class="signature-line"></div>
+                        <label>Unterschrift</label>
+                    </div>
+                </div>
+            </section>
+
+            <footer class="page-footer">
+                <span class="version">Stand: 01/2025</span>
+                <span class="page-number">2</span>
+            </footer>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="no-print submit-section">
+            <button type="button" class="win-btn submit-btn" onclick="sendToHR()">Senden an HR</button>
+        </div>
+    </form>
+
+    <script src="script.js"></script>
+</body>
+</html>
