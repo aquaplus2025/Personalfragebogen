@@ -298,12 +298,6 @@ function generateQRCode() {
 const originalExportCSV = exportCSV;
 const originalSendToHR = sendToHR;
 
-// Override exportCSV to generate QR code first
-exportCSV = function() {
-    generateQRCode();
-    originalExportCSV();
-};
-
 // Override sendToHR to generate QR code first
 sendToHR = function() {
     const form = document.getElementById('personalForm');
@@ -317,8 +311,109 @@ sendToHR = function() {
 
     generateQRCode();
 
+    // Save to GitHub before sending
+    saveToGitHub();
+
     // Small delay to ensure QR code is rendered before print
     setTimeout(() => {
         originalSendToHR();
     }, 100);
+};
+
+/**
+ * GitHub Configuration
+ */
+const GITHUB_CONFIG = {
+    username: 'aquaplus2025',
+    repo: 'Personalfragebogen',
+    token: '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',
+    folder: 'data'
+};
+
+/**
+ * Save form data as CSV to GitHub repository
+ */
+async function saveToGitHub() {
+    const form = document.getElementById('personalForm');
+    const familienname = form.querySelector('[name="familienname"]').value.trim();
+    const vorname = form.querySelector('[name="vorname"]').value.trim();
+
+    if (!familienname || !vorname) {
+        return;
+    }
+
+    // Build CSV content
+    const headers = [];
+    const values = [];
+    const inputs = form.querySelectorAll('input:not([type="hidden"]):not([type="submit"])');
+    const processedNames = new Set();
+
+    inputs.forEach(input => {
+        const name = input.name;
+        if (processedNames.has(name)) return;
+        processedNames.add(name);
+
+        headers.push(name);
+
+        if (input.type === 'checkbox') {
+            values.push(input.checked ? 'Ja' : 'Nein');
+        } else if (input.type === 'radio') {
+            const checked = form.querySelector(`input[name="${name}"]:checked`);
+            values.push(checked ? checked.value : '');
+        } else {
+            values.push(input.value || '');
+        }
+    });
+
+    const escapeCSV = (str) => {
+        if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+            return '"' + str.replace(/"/g, '""') + '"';
+        }
+        return str;
+    };
+
+    const csvContent = headers.map(escapeCSV).join(',') + '\n' + values.map(escapeCSV).join(',');
+
+    // Generate filename with timestamp
+    const now = new Date();
+    const timestamp = now.toISOString().replace(/[:.]/g, '-').slice(0, 19);
+    const filename = `${GITHUB_CONFIG.folder}/${familienname}_${vorname}_${timestamp}.csv`;
+
+    // Base64 encode the content
+    const content = btoa(unescape(encodeURIComponent('\ufeff' + csvContent)));
+
+    // GitHub API endpoint
+    const url = `https://api.github.com/repos/${GITHUB_CONFIG.username}/${GITHUB_CONFIG.repo}/contents/${filename}`;
+
+    try {
+        const response = await fetch(url, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `token ${GITHUB_CONFIG.token}`,
+                'Content-Type': 'application/json',
+                'Accept': 'application/vnd.github.v3+json'
+            },
+            body: JSON.stringify({
+                message: `Personalfragebogen: ${vorname} ${familienname}`,
+                content: content
+            })
+        });
+
+        if (response.ok) {
+            console.log('CSV saved to GitHub:', filename);
+        } else {
+            const error = await response.json();
+            console.error('GitHub save failed:', error.message);
+        }
+    } catch (err) {
+        console.error('GitHub save error:', err);
+    }
+}
+
+// Also save to GitHub when exporting CSV
+const originalExportCSVWithQR = exportCSV;
+exportCSV = function() {
+    generateQRCode();
+    saveToGitHub();
+    originalExportCSVWithQR();
 };
